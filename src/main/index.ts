@@ -1,4 +1,5 @@
 import { app, BrowserWindow, dialog } from "electron";
+import { readFile } from "fs/promises";
 import { join } from "path";
 
 const createWindow = () => {
@@ -22,6 +23,7 @@ const createWindow = () => {
 	mainWindow.once("ready-to-show", () => {
 		mainWindow.show();
 		mainWindow.focus();
+		showOpenDialog(mainWindow);
 	});
 
 	mainWindow.webContents.openDevTools({
@@ -42,3 +44,24 @@ app.on("activate", () => {
 		createWindow();
 	}
 });
+
+const showOpenDialog = async (browserWindow: BrowserWindow) => {
+	const result = await dialog.showOpenDialog(browserWindow, {
+		title: "Open File",
+		buttonLabel: "Open",
+		properties: ["openFile", "multiSelections"],
+		// filters: below means only show files with .md extension
+		filters: [{ name: "PDF Files", extensions: ["pdf"] }],
+	});
+
+	if (result.canceled) return;
+
+	const [filePath] = result.filePaths;
+	openFile(filePath);
+};
+
+const openFile = async (filePath: string) => {
+	const content = await readFile(filePath, "utf-8");
+
+	console.log({ filePath, content });
+};
