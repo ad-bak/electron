@@ -18,17 +18,17 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^6.3.0",
-    "@electron-forge/maker-deb": "^6.3.0",
-    "@electron-forge/maker-rpm": "^6.3.0",
-    "@electron-forge/maker-squirrel": "^6.3.0",
-    "@electron-forge/maker-zip": "^6.3.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^6.3.0",
-    "@electron-forge/plugin-vite": "^6.3.0",
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
+    "@electron-forge/plugin-vite": "^6.4.2",
     "@tailwindcss/typography": "^0.5.9",
-    "autoprefixer": "^10.4.15",
+    "autoprefixer": "^10.4.20",
     "electron": "26.0.0",
-    "postcss": "^8.4.28",
+    "postcss": "^8.4.49",
     "tailwindcss": "^3.3.3"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.2",
     "remark-rehype": "^10.1.0",
-    "unified": "^11.0.1"
-  }
+    "unified": "^11.0.5"
+  },
+  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
 }
