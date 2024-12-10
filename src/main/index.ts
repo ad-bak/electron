@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import { readFile } from "fs/promises";
 import { join } from "path";
 
@@ -8,6 +8,7 @@ const createWindow = () => {
 		height: 600,
 		show: false,
 		webPreferences: {
+			nodeIntegration: true,
 			preload: join(__dirname, "preload.js"),
 		},
 	});
@@ -23,7 +24,6 @@ const createWindow = () => {
 	mainWindow.once("ready-to-show", () => {
 		mainWindow.show();
 		mainWindow.focus();
-		showOpenDialog(mainWindow);
 	});
 
 	mainWindow.webContents.openDevTools({
@@ -51,17 +51,26 @@ const showOpenDialog = async (browserWindow: BrowserWindow) => {
 		buttonLabel: "Open",
 		properties: ["openFile", "multiSelections"],
 		// filters: below means only show files with .md extension
-		filters: [{ name: "PDF Files", extensions: ["pdf"] }],
+		filters: [{ name: "Markdown Files", extensions: ["md"] }],
 	});
 
 	if (result.canceled) return;
 
 	const [filePath] = result.filePaths;
-	openFile(filePath);
+	openFile(browserWindow, filePath);
 };
 
-const openFile = async (filePath: string) => {
+const openFile = async (browserWindow: BrowserWindow, filePath: string) => {
 	const content = await readFile(filePath, "utf-8");
 
+	browserWindow.webContents.send("file-opened", content, filePath);
 	console.log({ filePath, content });
 };
+
+ipcMain.handle("show-open-dialog", async (event) => {
+	const browserWindow = BrowserWindow.fromWebContents(event.sender);
+
+	if (!browserWindow) return;
+
+	showOpenDialog(browserWindow);
+});
