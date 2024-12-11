@@ -19,3 +19,10 @@ Elements.ExportHtmlButton.addEventListener("click", () => {
 	const html = Elements.MarkdownView.value;
 	window.api.showExportHtmlDialog(html);
 });
+
+Elements.SaveMarkdownButton.addEventListener("click", () => {
+	const markdown = Elements.MarkdownView.value;
+	window.api.saveFile(markdown);
+});
+
+Elements.SaveMarkdownButton.disabled = false;
