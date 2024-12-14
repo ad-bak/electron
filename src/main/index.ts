@@ -29,6 +29,10 @@ const setCurrentFile = (
 	browserWindow.setRepresentedFilename(filePath);
 };
 
+const hasChanges = (content: string) => {
+	return currentFile.content !== content;
+};
+
 let currentFile: MarkdownFile = {
 	content: "",
 	filePath: undefined,
@@ -165,4 +169,15 @@ ipcMain.handle("save-file", async (event, content: string) => {
 	if (!browserWindow) return;
 
 	await saveFile(browserWindow, content);
+
+	return true;
+});
+
+ipcMain.handle("has-changes", async (event, content: string) => {
+	const browserWindow = BrowserWindow.fromWebContents(event.sender);
+	const changed = hasChanges(content);
+
+	browserWindow?.setDocumentEdited(changed);
+
+	return changed;
 });

@@ -15,4 +15,10 @@ contextBridge.exposeInMainWorld("api", {
 	saveFile: (filePath: string, content: string) => {
 		ipcRenderer.invoke("save-file", filePath, content);
 	},
+
+	checkForUnsavedChanges: async (content: string) => {
+		const result = await ipcRenderer.invoke("has-changes", content);
+
+		return result;
+	},
 });
