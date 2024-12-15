@@ -21,4 +21,11 @@ contextBridge.exposeInMainWorld("api", {
 
 		return result;
 	},
+
+	showInFolder: () => {
+		ipcRenderer.invoke("show-in-folder");
+	},
+	openInDefaultApplication: () => {
+		ipcRenderer.invoke("open-in-default-application");
+	},
 });

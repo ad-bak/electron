@@ -1,6 +1,7 @@
-import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, Menu, shell } from "electron";
 import { readFile, writeFile } from "fs/promises";
 import { join, basename } from "path";
+import { MenuItemConstructorOptions } from "electron";
 
 type MarkdownFile = {
 	filePath?: string;
@@ -65,6 +66,8 @@ const createWindow = () => {
 	mainWindow.webContents.openDevTools({
 		mode: "detach",
 	});
+
+	return mainWindow;
 };
 
 app.on("ready", createWindow);
@@ -181,3 +184,51 @@ ipcMain.handle("has-changes", async (event, content: string) => {
 
 	return changed;
 });
+
+ipcMain.handle("show-in-folder", async () => {
+	if (currentFile.filePath) {
+		shell.showItemInFolder(currentFile.filePath);
+	}
+});
+
+ipcMain.handle("open-in-default-application", async () => {
+	if (currentFile.filePath) {
+		shell.openPath(currentFile.filePath);
+	}
+});
+
+const template: MenuItemConstructorOptions[] = [
+	{
+		label: "File",
+		submenu: [
+			{
+				label: "Open",
+				click: () => {
+					let browserWindow = BrowserWindow.getFocusedWindow();
+
+					if (!browserWindow) {
+						browserWindow = createWindow();
+					}
+
+					showOpenDialog(browserWindow);
+				},
+			},
+		],
+	},
+
+	{
+		label: "Edit",
+		role: "editMenu",
+	},
+];
+
+if (process.platform === "darwin") {
+	template.unshift({
+		label: app.name,
+		role: "appMenu",
+	});
+}
+
+const menu = Menu.buildFromTemplate(template);
+
+Menu.setApplicationMenu(menu);

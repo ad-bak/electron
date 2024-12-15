@@ -3,6 +3,8 @@ import Elements from "./elements";
 
 window.api.onFileOpen((content) => {
 	Elements.MarkdownView.value = content;
+	Elements.ShowFileButton.disabled = false;
+	Elements.OpenInDefaultApplicationButton.disabled = false;
 	renderMarkdown(Elements.MarkdownView.value);
 	Elements.SaveMarkdownButton.disabled = true;
 });
@@ -27,4 +29,12 @@ Elements.SaveMarkdownButton.addEventListener("click", async () => {
 	const markdown = Elements.MarkdownView.value;
 	Elements.SaveMarkdownButton.disabled = true;
 	await window.api.saveFile(markdown);
+});
+
+Elements.ShowFileButton.addEventListener("click", () => {
+	window.api.showInFolder();
+});
+
+Elements.OpenInDefaultApplicationButton.addEventListener("click", () => {
+	window.api.openInDefaultApplication();
 });
